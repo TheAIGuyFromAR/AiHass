@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "home-assistant": {
+      "command": "aihass",
+      "args": ["mcp"],
+      "env": {
+        "AIHASS_HASS_URL": "http://homeassistant.local:8123",
+        "AIHASS_HASS_TOKEN": "YOUR_LONG_LIVED_ACCESS_TOKEN_HERE"
+      }
+    }
+  }
+}

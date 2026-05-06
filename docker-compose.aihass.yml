@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # PostgreSQL with TimescaleDB for queryable state history
+  db:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_USER: aihass
+      POSTGRES_PASSWORD: aihass
+      POSTGRES_DB: aihass
+    ports:
+      - "5432:5432"
+    volumes:
+      - aihass_db:/var/lib/postgresql/data
+
+  # AiHass bridge (API + DB sync)
+  aihass:
+    build: .
+    command: aihass serve
+    environment:
+      AIHASS_HASS_URL: http://homeassistant.local:8123
+      AIHASS_HASS_TOKEN: ${HASS_TOKEN}
+      AIHASS_DATABASE_URL: postgresql+asyncpg://aihass:aihass@db:5432/aihass
+      AIHASS_API_HOST: 0.0.0.0
+      AIHASS_API_PORT: 8100
+    ports:
+      - "8100:8100"
+    depends_on:
+      - db
+
+volumes:
+  aihass_db:
